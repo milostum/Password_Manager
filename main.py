@@ -5,6 +5,25 @@ import pyperclip
 import json
 
 
+# ---------------------------- SEARCH WEBSITE ------------------------------- #
+def find_password():
+    website = website_entry.get()
+    try:
+        with open("data.json", "r") as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showerror(title="Error", message="No Data File Found")
+    else:
+        if website == "":
+            messagebox.showerror(title="Oops", message="Please don't leave any fields empty!")
+        elif website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title=website, message=f"Email: {email} \n\nPassword: {password}")
+        else:
+            messagebox.showinfo(title=website, message=f"No details for the {website} exist.")
+
+
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 # Password Generator Project
 def generate_password():
@@ -22,9 +41,9 @@ def generate_password():
 
     password_list = []
 
-    password_list.extend([random.choice(letters) for x in range(nr_letters)])
-    password_list.extend([random.choice(symbols) for y in range(nr_symbols)])
-    password_list.extend([random.choice(numbers) for z in range(nr_numbers)])
+    password_list.extend([random.choice(letters) for _ in range(nr_letters)])
+    password_list.extend([random.choice(symbols) for _ in range(nr_symbols)])
+    password_list.extend([random.choice(numbers) for _ in range(nr_numbers)])
 
     random.shuffle(password_list)
 
@@ -89,9 +108,12 @@ canvas.grid(column=1, row=0)
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
-website_entry = Entry(width=55)
-website_entry.grid(column=1, row=1, columnspan=2)
+website_entry = Entry(width=36)
+website_entry.grid(column=1, row=1)
 website_entry.focus()
+
+search_button = Button(text="Search", width=14, command=find_password)
+search_button.grid(column=2, row=1)
 
 email_label = Label(text="Email/Username:")
 email_label.grid(column=0, row=2)
